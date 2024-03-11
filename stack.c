@@ -38,13 +38,23 @@ Stack *stack_push(Stack *stack, int element) {
   return stack;
 }
 
-int stack_pop(Stack *stack, int *element) {
-  if(is_stack_empty(stack)) return stack;
+// Pass by pointer
+bool stack_pop(Stack *stack, int *element) {
+  if(is_stack_empty(stack)) return false;
   
   stack->size--;
   *element = stack->elements[stack->size];
   
-  return element;
+  return true;
+}
+
+// Pass by pointer
+bool stack_peek(Stack *stack, int *element) {
+  if(is_stack_empty(stack)) return false;
+
+  *element = stack->elements[stack->size - 1];
+
+  return true;
 }
 
 void stack_print(char *name, Stack *stack) {
@@ -57,7 +67,6 @@ void stack_print(char *name, Stack *stack) {
 
 int main() {
   Stack *stack = stack_new(5);
-  //stack_print("Stack: ", stack);
   
   printf("Stack is empty? %s\n", is_stack_empty(stack) ? "true" : "false");
 
@@ -68,8 +77,15 @@ int main() {
   stack_push(stack, 5);
   stack_print("Stack after pushing", stack);
 
-  stack_pop(stack);
-  stack_pop(stack);
+  int elem = 0;
+  stack_pop(stack, &elem);
+  printf("Popped: %d\n", elem);
+  stack_pop(stack, &elem);
+  printf("Popped: %d\n", elem);
   stack_print("Stack after popping", stack);
+
+  stack_peek(stack, &elem);
+  printf("Peek: %d\n", elem);
+  stack_print("Stack after peeking", stack);
   return 0;
 }
